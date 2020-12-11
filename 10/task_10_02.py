@@ -1,17 +1,19 @@
 import collections
 
-adapters = [0]
+adapters = {0}
+max_jolts = 0
 
 with open('input.txt', 'r') as data:
   for line in data:
-    adapters.append(int(line.rstrip()))
+    val = int(line.rstrip())
+    adapters.add(val)
+    if max_jolts < val:
+      max_jolts = val
 
-adapters.sort()
+max_jolts += 3
 
 n = len(adapters)
-adapters.append(adapters[-1] + 3)
-
-i = len(adapters) - 1
+adapters.add(max_jolts)
 
 for v in range(len(adapters)):
   print('{:2d} '.format(v), end='')
@@ -21,32 +23,18 @@ for v in adapters:
   print('{:2d} '.format(v), end='')
 print()
 
-ways = [0] * len(adapters)
+ways = [0] * (max_jolts + 1)
 
 ways[0] = 1
 
-while i > 0:
-  print('{:-^100}'.format(' ITERATION '))
-  diff = adapters[i] - 3
-  c = 0
-  j = i - 1
-  print('{:2d} {:2d} {:2d}'.format(i, adapters[i], diff))
+for i in range(1, len(ways)):
+  ways[i] = 0
+  if (i - 1) >= 0 and (i - 1) in adapters:
+    ways[i] += ways[i-1]
+  if (i - 2) >= 0 and (i - 2) in adapters:
+    ways[i] += ways[i-2]
+  if (i - 3) >= 0 and (i - 3) in adapters:
+    ways[i] += ways[i-3]
 
-  print(' {:2d} {:2d} {:2d}'.format(j, adapters[j], c))
-  while j > 0 and adapters[j] >= diff:
-    c += 1
-    j -= 1
-    print('  {:2d} {:2d} {:2d}'.format(j, adapters[j], c))
-
-  ways[i] = c
-
-  i -= 1
-
-for v in adapters:
-  print('{:2d} '.format(v), end='')
-print()
-
-for v in ways:
-  print('{:2d} '.format(v), end='')
-print()
+print(ways[-1])
 
