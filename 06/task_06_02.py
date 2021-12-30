@@ -1,15 +1,23 @@
 total = 0
 
+answers = []
+ALL_ANSWERS = 'abcdefghijklmnopqrstuvwxyz'
 with open('input.txt', 'r') as data:
-  current_group = set('abcdefghijklmnopqrstuvwxyz')
+  accumulator = set(ALL_ANSWERS)
   for line in data:
-    print(line, end='')
-    if line == '\n':
-      total += len(current_group)
-      current_group = set('abcdefghijklmnopqrstuvwxyz')
-      print('Total', total)
+    line = line.strip()
+
+    if line == '':
+      answers.append(accumulator)
+      accumulator = set(ALL_ANSWERS)
     else:
-      current_group &= set(line[:-1])
-      print(current_group)
+      accumulator &= set(line)
+
+if len(accumulator) > 0:
+  answers.append(accumulator)
+  accumulator = set(ALL_ANSWERS)
+
+for answer in answers:
+  total += len(answer)
 
 print(total)
